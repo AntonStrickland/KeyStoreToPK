@@ -6,7 +6,9 @@ const KeystoreViewer = () => {
 	const [keystore, setKeystore] = useState(null);
 	const [password, setPassword] = useState('');
 	const [privateKey, setPrivateKey] = useState('');
+	const [address, setAddress] = useState('');
 	const [error, setError] = useState('');
+	const [progress, setProgress] = useState(null);
   
 	const handleFileUpload = (e) => {
 	  const reader = new FileReader();
@@ -20,12 +22,23 @@ const KeystoreViewer = () => {
 	  try {
 		setError('');
 		setPrivateKey('');
-		const wallet = await ethers.Wallet.fromEncryptedJson(keystore, password);
+		setAddress('');
+		setProgress(0);
+		const wallet = await ethers.Wallet.fromEncryptedJson(keystore, password, (p) => {
+		  // scrypt reports progress very often; only re-render on whole-percent changes
+		  const percent = Math.floor(p * 100);
+		  setProgress((prev) => (prev === percent ? prev : percent));
+		});
 		setPrivateKey(wallet.privateKey);
+		setAddress(wallet.address);
 	  } catch (e) {
 		setError('Failed to decrypt. Check your password and file.');
+	  } finally {
+		setProgress(null);
 	  }
 	};
+
+	const decrypting = progress !== null;
   
 	return (
 		<div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center p-6 text-gray-900 dark:text-gray-100">
@@ -36,7 +49,6 @@ const KeystoreViewer = () => {
 			  <label className="block mb-2 text-sm font-medium">Keystore File</label>
 			  <input
 				type="file"
-				accept=".json"
 				onChange={handleFileUpload}
 				className="block w-full text-sm file:mr-4 file:py-2 file:px-4
 						   file:rounded-md file:border-0 file:text-sm file:font-semibold
@@ -60,15 +72,28 @@ const KeystoreViewer = () => {
 	  
 			<button
 			  onClick={decryptKeystore}
-			  disabled={!keystore || !password}
+			  disabled={!keystore || !password || decrypting}
 			  className="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg
 						 hover:bg-blue-700 disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
 			>
-			  Decrypt to Private Key
+			  {decrypting ? `Decrypting… ${progress}%` : 'Decrypt to Private Key'}
 			</button>
-	  
+
+			{decrypting && (
+			  <progress
+				value={progress}
+				max="100"
+				className="w-full h-2 rounded-lg overflow-hidden accent-blue-600"
+			  />
+			)}
+
 			{privateKey && (
-				<div className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 p-4 rounded-lg flex items-center justify-between">
+				<div className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 p-4 rounded-lg space-y-3">
+				<div>
+					<div className="text-sm font-medium">Wallet address</div>
+					<div className="font-mono text-sm break-all">{address}</div>
+				</div>
+				<div className="flex items-center justify-between">
 				<span className="italic text-sm">Private key is hidden for your security</span>
 				<button
 					onClick={() => navigator.clipboard.writeText(privateKey)}
@@ -76,6 +101,7 @@ const KeystoreViewer = () => {
 				>
 					Copy
 				</button>
+				</div>
 				</div>
 			)}
 	  

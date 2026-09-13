@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@plugin "daisyui";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant coffee (&:where(.coffee, .coffee *));
@@ -27,9 +26,6 @@
 }
 
 @layer base {
-	button {
-	  cursor: pointer;
-	}
   
 	a {
 		cursor: pointer;

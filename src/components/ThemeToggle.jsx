@@ -2,23 +2,21 @@ import { useState, useEffect } from "react";
  
 const ThemeToggle = () => {
 
-  const [theme, setTheme] = useState("light");
-  const [mounted, setMounted] = useState(false);
- 
+  const themes = ["light", "dark"];
+
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('theme');
+    return themes.includes(saved) ? saved : "light";
+  });
+
   useEffect(() => {
-    if (!mounted) {
-      setTheme(localStorage.getItem('theme'));
-      setMounted(true);
-    }
     document.body.setAttribute("data-theme", theme);
   }, [theme]);
 
-  const themes = ["light", "dark"];
- 
   const toggleTheme = () => {
 
     const themeIndex = themes.indexOf(theme);
-    const nextIndex = themeIndex + 1 > themes.length ? 0 : themeIndex + 1;
+    const nextIndex = (themeIndex + 1) % themes.length;
 
     localStorage.setItem('theme', themes[nextIndex]);
     setTheme(themes[nextIndex]);
