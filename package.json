@@ -1,8 +1,8 @@
 {
   "name": "keystore-to-pk",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Decrypt an Ethereum keystore file to its private key, entirely in the browser",
+  "private": true,
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -10,20 +10,17 @@
     "preview": "vite preview"
   },
   "keywords": [],
-  "author": "",
+  "author": "Anton Strickland",
   "license": "MIT",
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.3",
+  "dependencies": {
+    "ethers": "^6.14.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.14",
+    "@vitejs/plugin-react": "^4.3.4",
     "tailwindcss": "^4.0.14",
     "vite": "^6.2.1"
-  },
-  "dependencies": {
-    "@tailwindcss/postcss": "^4.0.14",
-    "@tailwindcss/vite": "^4.0.14",
-    "ethers": "^6.14.3"
   }
 }

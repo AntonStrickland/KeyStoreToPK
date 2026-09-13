@@ -1,55 +1,35 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where(.dark, .dark *));
-@custom-variant coffee (&:where(.coffee, .coffee *));
- 
-/* On data-theme attribute */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-@custom-variant coffee (&:where([data-theme=coffee], [data-theme=coffee] *));
-
-@layer base {
-	[data-theme="light"] {
-	  --theme-color-foreground: hsl(0 0% 8%);
-	  --theme-color-background: hsl(0 0% 98%);
-	}
-   
-	[data-theme="dark"] {
-	  --theme-color-foreground: hsl(0 0% 98%);
-	  --theme-color-background: hsl(0 0% 3.9%);
-	}
-  }
 
 @layer base {
 	button {
-	  cursor: pointer;
+		cursor: pointer;
 	}
-}
 
-@layer base {
-  
+	button:disabled {
+		cursor: not-allowed;
+	}
+
 	a {
 		cursor: pointer;
-		color: rgb(149, 206, 255);
+		color: #2563eb;
 		text-decoration: none;
-	  }
-	  
-	  a:hover {
+	}
+
+	a:hover {
 		text-decoration: underline;
-	  }
-	  
-	  a:visited {
-		color: purple;
-	  }
-	  
-	  /* Dark mode support */
-	  @media (prefers-color-scheme: dark) {
-		a {
-		  color: #60a5fa; 
-		}
-	  
-		a:visited {
-		  color: #c084fc; 
-		}
-	  }
-	  
-  }
+	}
+
+	a:visited {
+		color: #7e22ce;
+	}
+
+	[data-theme="dark"] a {
+		color: #60a5fa;
+	}
+
+	[data-theme="dark"] a:visited {
+		color: #c084fc;
+	}
+}
